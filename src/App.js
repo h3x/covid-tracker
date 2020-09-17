@@ -8,23 +8,30 @@ import styles from './App.module.css';
 class App extends React.Component {
     state = {
         data: {},
+        country: '',
     }
 
 
     async componentDidMount(){
         const data = await fetchData();
-        this.setState({data:data});
+        this.setState({data});
+    }
+
+    handleCountryChange = async (country) => {
+        country = country == 'global' ? '' : country;
+        const data = await fetchData(country);
+        this.setState({data, country});
+         
     }
 
 
-
     render(){
-        const {data} = this.state;
+        const {data, country} = this.state;
         return(
             <div className={styles.container}>
                 <Cards data={data}/>
-                <CountryPicker />
-                <Chart />
+                <CountryPicker handleCountryChange={this.handleCountryChange}/>
+                <Chart data={data} country={country}/>
             </div>
         )
     }
